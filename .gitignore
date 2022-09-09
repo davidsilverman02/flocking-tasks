@@ -36,3 +36,7 @@ cmake-build*
 bin-emscripten/
 
 build/
+
+.vs/
+
+CMakeSettings.json

@@ -10,13 +10,17 @@ Vector2 CohesionRule::computeForce(const std::vector<Boid*>& neighborhood, Boid*
 
     //centerOfMass = boid->transform.position;
 
-    for (int i = 0; i < neighborhood.size(); i++) 
+    if (neighborhood.empty() == false)
     {
-        centerOfMass += neighborhood[i]->getPosition();
-    }
+        for (int i = 0; i < neighborhood.size(); i++)
+        {
+            centerOfMass += neighborhood[i]->getPosition();
+        }
 
-    centerOfMass.x /= (neighborhood.size());
-    centerOfMass.y /= (neighborhood.size());
+        centerOfMass.x /= (neighborhood.size());
+        centerOfMass.y /= (neighborhood.size());
+
+    }
 
     cohesionForce = (centerOfMass - boid->transform.position).normalized();
 

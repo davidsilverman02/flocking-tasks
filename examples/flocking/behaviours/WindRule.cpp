@@ -2,12 +2,13 @@
 #include <imgui.h>
 #include "../gameobjects/Boid.h"
 #include "../gameobjects/World.h"
+#include <cmath>
 
 Vector2 WindRule::computeForce(const std::vector<Boid*>& neighborhood, Boid* boid) {
     
-    float windForce = weight;
+    Vector2 vent = Vector2(cos(windAngle), sin(windAngle));
 
-    return Vector2::zero();
+    return vent;
 }
 
 bool WindRule::drawImguiRuleExtra() {

@@ -1,6 +1,7 @@
 #include "SeparationRule.h"
 #include "../gameobjects/Boid.h"
 #include "../gameobjects/World.h"
+#include <iostream>
 
 Vector2 SeparationRule::computeForce(const std::vector<Boid*>& neighborhood, Boid* boid) {
     //Try to avoid boids too close
@@ -9,7 +10,7 @@ Vector2 SeparationRule::computeForce(const std::vector<Boid*>& neighborhood, Boi
     float effectiveForce = 0;
     Vector2 direction = Vector2::zero();
     float effectiveDistance = 0;
-    float maxAcelera = 1000;
+    float maxAcelera = 10000;
 
     float desiredDistance = desiredMinimalDistance;
 
@@ -25,10 +26,11 @@ Vector2 SeparationRule::computeForce(const std::vector<Boid*>& neighborhood, Boi
 
             if (effectiveDistance < desiredDistance)
             {
-                effectiveForce = weight / (effectiveDistance * effectiveDistance);
+                effectiveForce = -100 / (effectiveDistance * effectiveDistance);
+                //std::cout << effectiveForce << std::endl;
 
-                if (effectiveForce > maxAcelera)
-                    effectiveForce = maxAcelera;
+                if (effectiveForce < -maxAcelera)
+                    effectiveForce = -maxAcelera;
 
                 direction = Vector2::normalized(direction);
 

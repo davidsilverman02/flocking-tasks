@@ -4,8 +4,9 @@
 #include "../gameobjects/World.h"
 
 Vector2 WindRule::computeForce(const std::vector<Boid*>& neighborhood, Boid* boid) {
-    // todo: add a wind force here
-    // hint: use the windAngle variable
+    
+    float windForce = weight;
+
     return Vector2::zero();
 }
 

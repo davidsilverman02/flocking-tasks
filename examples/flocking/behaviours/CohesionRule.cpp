@@ -18,7 +18,7 @@ Vector2 CohesionRule::computeForce(const std::vector<Boid*>& neighborhood, Boid*
     centerOfMass.x /= (neighborhood.size());
     centerOfMass.y /= (neighborhood.size());
 
-    cohesionForce = (centerOfMass - boid->transform.position);
+    cohesionForce = (centerOfMass - boid->transform.position).normalized();
 
     return cohesionForce;
 }

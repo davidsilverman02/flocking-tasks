@@ -5,67 +5,50 @@
 
 Vector2 SeparationRule::computeForce(const std::vector<Boid*>& neighborhood, Boid* boid) {
     //Try to avoid boids too close
-    
+    Vector2 centerOfMass = Vector2::zero();
     Vector2 separatingForce = Vector2::zero();
-    float effectiveForce = 0;
     Vector2 direction = Vector2::zero();
+    Vector2 effectiveDirection = Vector2::zero();
     float effectiveDistance = 0;
     float maxAcelera = 10000;
-
+    int countCloseFlockmates = 0;
+    Vector2 position = boid->transform.position;
     float desiredDistance = desiredMinimalDistance;
 
     // todo: implement a force that if neighbor(s) enter the radius, moves the boid away from it/them
     if (!neighborhood.empty()) {
-        Vector2 position = boid->transform.position;
-        int countCloseFlockmates = 0;
+        
 
         for (int i = 0; i < neighborhood.size(); i++)
         {
-            direction = neighborhood[i]->transform.position - position;
+            direction = position - neighborhood[i]->transform.position;
             effectiveDistance = direction.getMagnitude();
 
             if (effectiveDistance < desiredDistance)
             {
-                effectiveForce = -100 / (effectiveDistance * effectiveDistance);
-                //std::cout << effectiveForce << std::endl;
-
-                if (effectiveForce < -maxAcelera)
-                    effectiveForce = -maxAcelera;
-
-                direction = Vector2::normalized(direction);
-
-                separatingForce += effectiveForce * direction;
+                countCloseFlockmates++;
+                centerOfMass += neighborhood[i]->getPosition();
             }
 
         }
     }
 
-    return separatingForce;
-
-    
-
-    //Vector2 cohesionForce;
-    //Vector2 centerOfMass;
-
-    // todo: add your code here to make a force towards the center of mass
-    // hint: iterate over the neighborhood
-
-    //centerOfMass = boid->transform.position;
-
-    /*
-    for (int i = 0; i < neighborhood.size(); i++)
+    if (countCloseFlockmates > 0)
     {
-        centerOfMass += neighborhood[i]->getPosition();
+        centerOfMass /= countCloseFlockmates;
+        effectiveDirection = position - centerOfMass;
+        float effectiveMagnitude = effectiveDirection.getMagnitude();
+        
+        if (effectiveMagnitude < 0.01)
+            effectiveMagnitude = 0.01;
+
+        Vector2 effectiveForce = effectiveDirection / effectiveMagnitude;
+
+        return Vector2::normalized(effectiveForce);
+
     }
 
-    centerOfMass.x /= (neighborhood.size());
-    centerOfMass.y /= (neighborhood.size());
-
-    cohesionForce = (boid->transform.position - centerOfMass).normalized() * weight;
-
-    return cohesionForce;
-
-    */
+    return Vector2::zero();
 }
 
 bool SeparationRule::drawImguiRuleExtra() {
